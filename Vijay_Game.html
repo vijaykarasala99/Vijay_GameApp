@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+       <title>Frank Tic_Tac</title>
+<style>
+
+.align{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body{
+    background-color: aliceblue;
+    width: 100vw;
+    text-align: center;
+    padding-top: 5vh;
+}
+
+.turn-container{
+    width: 170px;
+    height: 80px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    position: relative;
+}
+
+.turn-container h3{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.turn-container .turn-box{
+    border: 3px solid #000;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+
+.bg{
+    position: absolute;
+    width: 85px;
+    height: 40px;
+    background-color:aliceblue;
+    z-index: -1;
+}
+
+.main-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 300px;
+    width: 300px;
+    margin: 30px auto;
+    border: 2px solid #000;
+}
+
+.box{
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: 700;
+    border: 3px solid #000;
+}
+
+
+#again{
+    background-color: red;
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+</style>
+    </head>
+    <body>
+        <div class="turn-container">
+            <h3> Welcome to Game </h3>
+            <div class="turn-x-box">Frank </div>
+            <div class="turn-o-box">Other </div>
+             <div class="bg"></div>
+        </div>
+        <div class="main-grid">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+        <h2 id="results"></h2>
+        <button id="again">Play Again</button>
+    
+    <script> 
+    
+    var button = document.getElementById("again");
+    button.addEventListener("click", function() {
+            location.reload();
+        });
+
+let boxes = document.querySelectorAll(".box");
+let turn = "Frank";
+let isGameOver = false;
+
+boxes.forEach(e =>{
+    e.innerHTML = ""
+    e.addEventListener("click", ()=>{
+        if(!isGameOver && e.innerHTML === ""){
+            e.innerHTML = turn;
+            checkConditionforWin();
+            cheakDraw();
+            changeTurn();
+        }
+    })
+})
+
+function changeTurn(){
+    if(turn === "Frank"){
+        turn = "O";
+        document.querySelector(".bg").style.left = "85px";
+    }
+    else{
+        turn = "Frank";
+        document.querySelector(".bg").style.left = "80px";
+    }
+}
+
+function checkConditionforWin()
+{
+   
+    const winParticulars = [
+
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    
+    [0, 4, 8], [2, 4, 6]
+];
+
+    for (const condition of winParticulars)
+     {
+        const [a, b, c] = condition;
+        const v0 = boxes[a].innerHTML;
+        const v1 = boxes[b].innerHTML;
+        const v2 = boxes[c].innerHTML;
+
+        if (v0 !== "" && v0 === v1 && v0 === v2) {
+            isGameOver = true;
+            document.querySelector("#results").innerHTML = `${turn} wins`;
+            document.querySelector("#play-again").style.display = "inline";
+
+            for (const index of condition) {
+                boxes[index].style.backgroundColor = "#08D9D6";
+                boxes[index].style.color = "#000";
+            }
+            break; 
+        }
+    }
+}
+
+function cheakDraw()
+{
+    if(!isGameOver){
+        let isDraw = true;
+        boxes.forEach(e =>{
+            if(e.innerHTML === "") isDraw = false;
+        })
+
+        if(isDraw){
+            isGameOver = true;
+            document.querySelector("#results").innerHTML = "Draw";
+            document.querySelector("again").style.display = "inline"
+        }
+    }
+}
+
+document.querySelector("#gain").addEventListener("click", ()=>{
+    isGameOver = false;
+    turn = "Frank";
+    document.querySelector(".bg").style.left = "0";
+    document.querySelector("#results").innerHTML = "";
+    document.querySelector("#again").style.display = "none";
+
+    boxes.forEach(e =>{
+        e.innerHTML = "";
+        e.style.removeProperty("background-color");
+        
+    })
+})
+
+    </script>
+</body>
+</html>
